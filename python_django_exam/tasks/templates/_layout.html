@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .project-link, .project-btn {
+            color: #333;
+            background-color: #d4d4d4;
+            padding: 6px;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+
+        .project-link:hover, .project-btn:hover {
+            background-color: #959595;
+            color: #cfcfcf;
+        }
+
+        .project-btn {
+            border: 1px solid #d2d2d2;
+        }
+
+
+
+
+    </style>
+
+</head>
+<body>
+
+
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Navbar</a>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid">
+        <div class="row">
+
+            {% block sidebar %}
+                <div class="col-md-3 col-lg-2 sidebar vh-100 p-3 border-end">
+                    <h6 class="text-uppercase text-muted small">Проекти</h6>
+                    <ul class="nav flex-column">
+
+                        {% for project in projects %}
+                            <li class="nav-item d-flex align-items-center mt-1 position-relative">
+                                <a class="nav-link project-link flex-grow-1" href="#">{{ project.name }}</a>
+                                <div class="btn-group position-absolute end-0 top-50 translate-middle-y" style="margin-right: 7px;">
+                                    <a href="/edit_project/{{project.id}}" class="btn btn-warning" style="font-size: 0.75rem; padding: 2px 6px;">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                
+                                    <a href="/delete_project/{{project.id}}" class="btn btn-danger" style="font-size: 0.75rem; padding: 2px 6px;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                                
+                            </li>
+                        {% endfor %}
+
+
+                    </ul>
+                    <a href="/create_project"  class="btn project-btn w-100 mt-2">add</a>
+                </div>
+            {% endblock %}
+
+
+
+            <!-- Основний контент -->
+            <main class="col-md-9 col-lg-10 ms-sm-auto">
+
+                {% block content %}
+                
+                {% endblock %}
+    
+            </main>
+
+        </div>
+    </div>
+
+
+
+
+</body>
+</html>
