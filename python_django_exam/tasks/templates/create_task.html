@@ -1,0 +1,44 @@
+{% extends "_layout.html" %}
+
+{% block title %}Створити задачу{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Створити задачу для проєкту: <strong>{{ project.name }}</strong></h2>
+    
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label d-block">Назва</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label d-block">Опис</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">Статус </label>
+                    {{ form.status }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.deadline.id_for_label }}" class="form-label d-block">Дедлайн</label>
+                    <div class="col-sm-3">
+                    <input type="datetime-local" name="{{ form.deadline.name }}" id="{{ form.deadline.id_for_label }}" 
+                        class="form-control" value="{{ form.deadline.value|date:'Y-m-d\TH:i' }}">
+                    </div>
+                </div>
+                
+
+                <button type="submit" class="btn btn-primary">Створити</button>
+                <a href="/tasks/{{project.id}}" class="btn btn-secondary">Скасувати</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

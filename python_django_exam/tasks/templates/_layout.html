@@ -53,7 +53,7 @@
 
                         {% for project in projects %}
                             <li class="nav-item d-flex align-items-center mt-1 position-relative">
-                                <a class="nav-link project-link flex-grow-1" href="#">{{ project.name }}</a>
+                                <a class="nav-link project-link flex-grow-1" href="/tasks/{{project.id}}">{{ project.name }}</a>
                                 <div class="btn-group position-absolute end-0 top-50 translate-middle-y" style="margin-right: 7px;">
                                     <a href="/edit_project/{{project.id}}" class="btn btn-warning" style="font-size: 0.75rem; padding: 2px 6px;">
                                         <i class="bi bi-pencil-fill"></i>

@@ -1,0 +1,237 @@
+{% extends "_layout.html" %}
+
+{% block title %}Задачі проєкту{% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <!-- Назва проєкту -->
+    <h2>{{ project.name }}</h2>
+    <h6>{{ project.description }}</h6>
+
+    <!-- Кнопки вигляду -->
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <div>
+            <a href="?view=table" class="btn btn-outline-primary {% if view == 'table' %}active{% endif %}">Table</a>
+            <a href="?view=board" class="btn btn-outline-primary {% if view == 'board' %}active{% endif %}">Board</a>
+        </div>
+        <a href="/create_task/{{project.id}}" class="btn btn-success">Додати задачу</a>
+    </div>
+
+    
+    <!-- Фільтри та сортування -->
+    <form method="GET" class="mb-3">
+        <div class="row">
+
+            <!-- Фільтрація за дедлайном -->
+            <div class="col-auto">
+                <label for="deadline" class="form-label">Дедлайн до:</label>
+                <input type="date" name="deadline" id="deadline" class="form-control" value="{{ request.GET.deadline }}">
+            </div>
+    
+            <!-- Фільтрація за статусом -->
+            <div class="col-auto">
+                <label class="form-label">Статус:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="status" value="not_started" 
+                        {% if "not_started" in request.GET.status %}checked{% endif %}>
+                    <label class="form-check-label">Not started</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="status" value="in_progress" 
+                        {% if "in_progress" in request.GET.status %}checked{% endif %}>
+                    <label class="form-check-label">In progress</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="status" value="done" 
+                        {% if "done" in request.GET.status %}checked{% endif %}>
+                    <label class="form-check-label">Done</label>
+                </div>
+            </div>
+                
+            <!-- Сортування за дедлайном -->
+            <div class="col-auto">
+                <label for="sort" class="form-label">Сортувати за дедлайном:</label>
+                <select name="sort" id="sort" class="form-select">
+                    <option value="asc" {% if request.GET.sort == "asc" %}selected{% endif %}>Deadline &#8593;</option>
+                    <option value="desc" {% if request.GET.sort == "desc" %}selected{% endif %}>Deadline &#8595;</option>
+                </select>
+            </div>
+    
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-primary">Застосувати</button>
+            </div>
+        </div>
+    </form>
+
+    
+
+    <!-- Вивід задач -->
+    <div class="mt-4">
+        {% if view == "board" %}
+
+        <div class="container my-4">
+            <div class="row">
+                <!-- Таблиця для статусу "Не розпочато" -->
+                <div class="col-md-4">
+                    <h3>Not Started</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center align-middle">
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Deadline</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                {% if task.status == 'not_started' %}
+                                    <tr class="text-center align-middle">
+                                        <td>{{ task.name }}</td>
+                                        <td>{{ task.description }}</td>
+                                        <td>{{ task.deadline }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/edit_task/{{task.id}}" class="btn btn-warning" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                    
+                                                <a href="/delete_task/{{task.id}}" class="btn btn-danger" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3">Немає задач.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        
+                <!-- Таблиця для статусу "В процесі" -->
+                <div class="col-md-4">
+                    <h3>In Progress</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center align-middle">
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Deadline</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                {% if task.status == 'in_progress' %}
+                                    <tr class="text-center align-middle">
+                                        <td>{{ task.name }}</td>
+                                        <td>{{ task.description }}</td>
+                                        <td>{{ task.deadline }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/edit_task/{{task.id}}" class="btn btn-warning" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                    
+                                                <a href="/delete_task/{{task.id}}" class="btn btn-danger" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3">Немає задач.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        
+                <!-- Таблиця для статусу "Завершено" -->
+                <div class="col-md-4">
+                    <h3>Done</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center align-middle">
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Deadline</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                {% if task.status == 'done' %}
+                                    <tr class="text-center align-middle">
+                                        <td>{{ task.name }}</td>
+                                        <td>{{ task.description }}</td>
+                                        <td>{{ task.deadline }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/edit_task/{{task.id}}" class="btn btn-warning" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                    
+                                                <a href="/delete_task/{{task.id}}" class="btn btn-danger" style="font-size: 0.5rem;">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+            
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+
+        {% else %}
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr class="text-center align-middle">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>status</th>
+                        <th>deadline</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr class="text-center align-middle">
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.description }}</td>
+                            <td><span class="badge bg-secondary">{{ task.get_status_display }}</span></td>
+                            <td>{{ task.deadline|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="/edit_task/{{task.id}}" class="btn btn-warning">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                        
+                                    <a href="/delete_task/{{task.id}}" class="btn btn-danger">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
