@@ -75,10 +75,21 @@ WSGI_APPLICATION = 'python_django_exam.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+        'default': {
+        "ENGINE": "mssql",
+        "NAME": "python_django_ex",
+        "USER": "",
+        "PASSWORD": "",
+        "HOST": "(localdb)\MSSqlLocalDb",
+        "PORT": "",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
     }
+
 }
 
 
